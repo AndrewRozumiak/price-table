@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Таблиця цін — УкрМедіа</title>
+  <title>Таблиця цін — DOM та Event Loop</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="pricing.css" />
+  <link rel="stylesheet" href="dom.css" />
 </head>
 <body>
 
@@ -17,7 +18,6 @@
     </div>
   </header>
 
-  <!-- ===== ОСНОВНИЙ КОНТЕНТ ===== -->
   <main class="pricing-wrapper">
 
     <div class="section-title">
@@ -27,39 +27,36 @@
 
     <!-- ===== ЗАВДАННЯ 1: Перемикач місячний / річний ===== -->
     <div class="billing-toggle" role="group" aria-label="Період оплати">
-      <button
-        class="toggle-btn active"
-        id="btn-monthly"
-        aria-pressed="true"
-        data-period="monthly"
-      >Місячна оплата</button>
-
-      <button
-        class="toggle-btn"
-        id="btn-yearly"
-        aria-pressed="false"
-        data-period="yearly"
-      >
+      <button class="toggle-btn active" id="btn-monthly" aria-pressed="true" data-period="monthly">
+        Місячна оплата
+      </button>
+      <button class="toggle-btn" id="btn-yearly" aria-pressed="false" data-period="yearly">
         Річна оплата
         <span class="discount-badge">−20%</span>
       </button>
     </div>
 
-    <!-- Повідомлення про помилку (приховане за замовчуванням) -->
+    <!-- ===== ЗАВДАННЯ 3: Overlay завантаження ===== -->
+    <div class="loading-overlay" id="loading-overlay" hidden aria-live="assertive" role="status">
+      <div class="loading-spinner"></div>
+      <p class="loading-text" id="loading-text">Обробка запиту...</p>
+    </div>
+
+    <!-- Повідомлення про помилку -->
     <div class="error-message" id="error-box" role="alert" aria-live="assertive" hidden>
       <span id="error-text"></span>
       <button class="error-close" id="error-close" aria-label="Закрити">&times;</button>
     </div>
 
-    <!-- ===== СІТКА ТАРИФІВ ===== -->
+    <!-- ===== ЗАВДАННЯ 2: Підсвічена активна колонка ===== -->
+    <!--
+      Делегування подій: один слухач на #pricing-grid
+      обробляє кліки по всіх кнопках .select-plan-btn
+    -->
     <div class="pricing-grid" id="pricing-grid">
 
       <!-- Картка 1: Базовий -->
-      <article
-        class="pricing-card plan-basic"
-        data-plan-id="basic"
-        aria-labelledby="plan-basic-name"
-      >
+      <article class="pricing-card plan-basic" data-plan-id="basic" aria-labelledby="plan-basic-name">
         <div class="card-header">
           <div class="plan-name" id="plan-basic-name">Базовий</div>
           <div class="plan-price">
@@ -79,20 +76,14 @@
           </ul>
         </div>
         <div class="card-footer">
-          <button
-            class="select-plan-btn"
-            data-plan-id="basic"
-            type="button"
-          >Почати безкоштовно</button>
+          <button class="select-plan-btn" data-plan-id="basic" type="button">
+            Почати безкоштовно
+          </button>
         </div>
       </article>
 
       <!-- Картка 2: Про -->
-      <article
-        class="pricing-card plan-pro featured"
-        data-plan-id="pro"
-        aria-labelledby="plan-pro-name"
-      >
+      <article class="pricing-card plan-pro featured" data-plan-id="pro" aria-labelledby="plan-pro-name">
         <div class="card-header">
           <div class="badge">Найпопулярніший</div>
           <div class="plan-name" id="plan-pro-name">Про</div>
@@ -113,20 +104,14 @@
           </ul>
         </div>
         <div class="card-footer">
-          <button
-            class="select-plan-btn"
-            data-plan-id="pro"
-            type="button"
-          >Спробувати 14 днів</button>
+          <button class="select-plan-btn" data-plan-id="pro" type="button">
+            Спробувати 14 днів
+          </button>
         </div>
       </article>
 
       <!-- Картка 3: Корпоративний -->
-      <article
-        class="pricing-card plan-enterprise"
-        data-plan-id="enterprise"
-        aria-labelledby="plan-enterprise-name"
-      >
+      <article class="pricing-card plan-enterprise" data-plan-id="enterprise" aria-labelledby="plan-enterprise-name">
         <div class="card-header">
           <div class="plan-name" id="plan-enterprise-name">Корпоративний</div>
           <div class="plan-price">
@@ -146,22 +131,16 @@
           </ul>
         </div>
         <div class="card-footer">
-          <button
-            class="select-plan-btn"
-            data-plan-id="enterprise"
-            type="button"
-          >Зв'язатися з нами</button>
+          <button class="select-plan-btn" data-plan-id="enterprise" type="button">
+            Зв'язатися з нами
+          </button>
         </div>
       </article>
 
     </div><!-- /pricing-grid -->
 
-    <!-- ===== ІНФО-БЛОК ПРО ОБРАНИЙ ТАРИФ ===== -->
-    <div class="selected-plan-info" id="selected-plan-info" hidden>
-      <h3>✅ Обраний тариф: <span id="selected-plan-name">—</span></h3>
-      <p id="selected-plan-details"></p>
-      <button class="cancel-btn" id="cancel-btn" type="button">Скасувати вибір</button>
-    </div>
+    <!-- ===== ЗАВДАННЯ 3: Блок підтвердження (створюється JS динамічно) ===== -->
+    <div id="confirmation-area"></div>
 
     <!-- ===== ПОРІВНЯЛЬНА ТАБЛИЦЯ ===== -->
     <section class="compare-section">
@@ -170,72 +149,71 @@
         <thead>
           <tr>
             <th scope="col">Функція</th>
-            <th scope="col">Базовий</th>
-            <th scope="col">Про</th>
-            <th scope="col">Корпоративний</th>
+            <th scope="col" data-col="basic">Базовий</th>
+            <th scope="col" data-col="pro">Про</th>
+            <th scope="col" data-col="enterprise">Корпоративний</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Кількість статей</td>
-            <td>10 / міс</td>
-            <td>Необмежено</td>
-            <td>Необмежено</td>
+            <td data-col="basic">10 / міс</td>
+            <td data-col="pro">Необмежено</td>
+            <td data-col="enterprise">Необмежено</td>
           </tr>
           <tr>
             <td>Доступ до архіву</td>
-            <td>Базовий</td>
-            <td class="check">✓ Повний</td>
-            <td class="check">✓ Повний</td>
+            <td data-col="basic">Базовий</td>
+            <td data-col="pro" class="check">✓ Повний</td>
+            <td data-col="enterprise" class="check">✓ Повний</td>
           </tr>
           <tr>
             <td>Без реклами</td>
-            <td class="cross">✕</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
+            <td data-col="basic" class="cross">✕</td>
+            <td data-col="pro" class="check">✓</td>
+            <td data-col="enterprise" class="check">✓</td>
           </tr>
           <tr>
             <td>Аналітика</td>
-            <td class="cross">✕</td>
-            <td class="check">✓ Преміум</td>
-            <td class="check">✓ Преміум</td>
+            <td data-col="basic" class="cross">✕</td>
+            <td data-col="pro" class="check">✓ Преміум</td>
+            <td data-col="enterprise" class="check">✓ Преміум</td>
           </tr>
           <tr>
             <td>Кількість акаунтів</td>
-            <td>1</td><td>1</td><td>До 25</td>
+            <td data-col="basic">1</td>
+            <td data-col="pro">1</td>
+            <td data-col="enterprise">До 25</td>
           </tr>
           <tr>
             <td>API доступ</td>
-            <td class="cross">✕</td>
-            <td class="cross">✕</td>
-            <td class="check">✓</td>
+            <td data-col="basic" class="cross">✕</td>
+            <td data-col="pro" class="cross">✕</td>
+            <td data-col="enterprise" class="check">✓</td>
           </tr>
           <tr>
             <td>Підтримка</td>
-            <td>Email</td>
-            <td>Пріоритетна</td>
-            <td>Персональний менеджер</td>
+            <td data-col="basic">Email</td>
+            <td data-col="pro">Пріоритетна</td>
+            <td data-col="enterprise">Персональний менеджер</td>
           </tr>
         </tbody>
       </table>
     </section>
 
-    <!-- ===== КОНСОЛЬ-ЛОГ (для демонстрації JS у UI) ===== -->
+    <!-- ===== JS-ЛОГ EVENT LOOP ===== -->
     <section class="js-log-section">
-      <h3>📋 JS-консоль (демо)</h3>
-      <div class="js-log" id="js-log" aria-live="polite" aria-label="Лог JavaScript">
-        <p class="log-hint">Тут відображатимуться дії JavaScript...</p>
-      </div>
+      <h3>📋 Event Loop — порядок виконання</h3>
+      <div class="js-log" id="js-log" aria-live="polite"></div>
       <button class="clear-log-btn" id="clear-log" type="button">Очистити лог</button>
     </section>
 
   </main>
 
-  <!-- ===== ПІДВАЛ ===== -->
   <footer class="site-footer">
-    <p>&copy; 2026 УкрМедіа. Лабораторна робота №04 — JavaScript ES12+, Варіант 5.</p>
+    <p>&copy; 2026 УкрМедіа. Лабораторна робота №05 — DOM та Event Loop, Варіант 5.</p>
   </footer>
 
-  <script src="pricing.js"></script>
+  <script src="dom.js"></script>
 </body>
 </html>

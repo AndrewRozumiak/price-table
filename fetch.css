@@ -147,7 +147,14 @@
 .check { color: #22c55e; font-weight: 700; }
 .cross { color: #ef4444; }
 
-/* ----- pricing grid ----- */
+/* ----- pricing grid -----
+   Атрибут [hidden] у браузері дає display:none, але наш же клас .pricing-grid
+   задає display:grid з тією ж специфічністю — тоді сітка «перемагає», і скелетон
+   лишається видимим після fetch. Явно ховаємо елементи з [hidden]. */
+.pricing-grid[hidden] {
+  display: none !important;
+}
+
 .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.75rem; align-items: start; }
 @media (max-width: 860px) { .pricing-grid { grid-template-columns: 1fr; } }
 

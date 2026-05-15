@@ -525,15 +525,13 @@ const demoPromiseVsAwait = () => {
 };
 
 /* ============================================================
-   ЗАПУСК
+   ЗАПУСК — скрипт підключений з defer, тому DOM вже готовий
    ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  init();
-
+init().then(() => {
   document.getElementById('clear-log').addEventListener('click', () => {
     document.getElementById('js-log').innerHTML = '';
   });
-
-  // Демо через 2 секунди після завантаження
   setTimeout(() => demoPromiseVsAwait(), 2000);
+}).catch(err => {
+  console.error('init failed:', err);
 });

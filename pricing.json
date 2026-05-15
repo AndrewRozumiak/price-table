@@ -1,0 +1,108 @@
+{
+  "monthly": [
+    {
+      "id": "basic",
+      "plan": "Базовий",
+      "price": 0,
+      "desc": "Для особистого використання",
+      "badge": null,
+      "features": [
+        { "text": "До 10 статей на місяць",    "included": true  },
+        { "text": "Базовий доступ до архіву",   "included": true  },
+        { "text": "Новини у стрічці",           "included": true  },
+        { "text": "Без реклами",                "included": false },
+        { "text": "Преміум аналітика",          "included": false },
+        { "text": "API доступ",                 "included": false }
+      ],
+      "btnText": "Почати безкоштовно",
+      "accent": "#10b981"
+    },
+    {
+      "id": "pro",
+      "plan": "Про",
+      "price": 299,
+      "desc": "Для активних читачів",
+      "badge": "Найпопулярніший",
+      "features": [
+        { "text": "Необмежений доступ",         "included": true  },
+        { "text": "Повний архів матеріалів",     "included": true  },
+        { "text": "Без реклами",                 "included": true  },
+        { "text": "Преміум аналітика",           "included": true  },
+        { "text": "Персональна стрічка",         "included": true  },
+        { "text": "API доступ",                  "included": false }
+      ],
+      "btnText": "Спробувати 14 днів",
+      "accent": "#6366f1"
+    },
+    {
+      "id": "enterprise",
+      "plan": "Корпоративний",
+      "price": 1499,
+      "desc": "Для команд і організацій",
+      "badge": null,
+      "features": [
+        { "text": "Усе з тарифу Про",            "included": true },
+        { "text": "До 25 акаунтів",              "included": true },
+        { "text": "Без реклами",                 "included": true },
+        { "text": "Преміум аналітика",           "included": true },
+        { "text": "Персональна стрічка",         "included": true },
+        { "text": "API доступ",                  "included": true }
+      ],
+      "btnText": "Зв'язатися з нами",
+      "accent": "#f59e0b"
+    }
+  ],
+  "yearly": [
+    {
+      "id": "basic",
+      "plan": "Базовий",
+      "price": 0,
+      "desc": "Для особистого використання",
+      "badge": null,
+      "features": [
+        { "text": "До 10 статей на місяць",    "included": true  },
+        { "text": "Базовий доступ до архіву",   "included": true  },
+        { "text": "Новини у стрічці",           "included": true  },
+        { "text": "Без реклами",                "included": false },
+        { "text": "Преміум аналітика",          "included": false },
+        { "text": "API доступ",                 "included": false }
+      ],
+      "btnText": "Почати безкоштовно",
+      "accent": "#10b981"
+    },
+    {
+      "id": "pro",
+      "plan": "Про",
+      "price": 239,
+      "desc": "Для активних читачів",
+      "badge": "Найпопулярніший",
+      "features": [
+        { "text": "Необмежений доступ",         "included": true  },
+        { "text": "Повний архів матеріалів",     "included": true  },
+        { "text": "Без реклами",                 "included": true  },
+        { "text": "Преміум аналітика",           "included": true  },
+        { "text": "Персональна стрічка",         "included": true  },
+        { "text": "API доступ",                  "included": false }
+      ],
+      "btnText": "Спробувати 14 днів",
+      "accent": "#6366f1"
+    },
+    {
+      "id": "enterprise",
+      "plan": "Корпоративний",
+      "price": 1199,
+      "desc": "Для команд і організацій",
+      "badge": null,
+      "features": [
+        { "text": "Усе з тарифу Про",            "included": true },
+        { "text": "До 25 акаунтів",              "included": true },
+        { "text": "Без реклами",                 "included": true },
+        { "text": "Преміум аналітика",           "included": true },
+        { "text": "Персональна стрічка",         "included": true },
+        { "text": "API доступ",                  "included": true }
+      ],
+      "btnText": "Зв'язатися з нами",
+      "accent": "#f59e0b"
+    }
+  ]
+}
